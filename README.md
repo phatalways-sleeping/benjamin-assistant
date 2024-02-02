@@ -13,7 +13,7 @@ OPEN_AI_KEY=<YOUR_KEY>
 GPT_MODEL=<YOUR_MODEL> # gpt-3.5-turbo, gpt-4
 ```
 
-Moreover, add these to .env file if you want to use the server:
+Moreover, add these to .env file for the assistant to locate the files and directories:
 
 - The absolute path to the template you want to use.
 ```env
@@ -35,11 +35,11 @@ API_SCHEMA_ABSOLUTE_PATH=<your-api-schema-path>
 WEB_SERVER_PROJECT_ABSOLUTE_PATH=<your-web-server-project-path>
 ```
 
-**Note**: You must create the directories and files before running the server.
+**Note**: You must create the directories and files before running the project.
 
 ## Usage
 
-To use the server, run the following command:
+To use the assistant, run the following command:
 
 ```bash
 cargo build --release
@@ -52,7 +52,7 @@ or if you want to use the CLI, run the following command:
 cargo run
 ```
 
-Then you can start using the assistant by answering the prompts.
+Then you can start the conversation with the assistant by answering its prompts.
 
 
 # Limitations
