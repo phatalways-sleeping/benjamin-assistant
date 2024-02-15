@@ -80,7 +80,7 @@ pub async fn check_status_code(client: &Client, url: &str) -> Result<u16, reqwes
 pub fn read_code_template_contents() -> String {
     dotenv().ok();
     let code_template_absolute_path =
-        env::var("CODE_TEMPLATE_ABSOLUTE_PATH").expect("CODE_TEMPLATE_ABSOLUTE_PATH Key not found");
+        env::var("CODE_EXECUTE_TEMPLATE_ABSOLUTE_PATH").expect("CODE_EXECUTE_TEMPLATE_ABSOLUTE_PATH Key not found");
     let path: String = String::from(code_template_absolute_path);
     fs::read_to_string(path).expect("Failed to read code template")
 }

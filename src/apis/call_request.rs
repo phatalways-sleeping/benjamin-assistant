@@ -1,7 +1,7 @@
 use crate::models::{APIResponse, ChatCompletion, Message};
 use dotenv::dotenv;
 use reqwest::{
-    header::{HeaderMap, HeaderValue},
+    header::{self, HeaderMap, HeaderValue},
     Client,
 };
 use std::env;
@@ -13,7 +13,6 @@ pub async fn call_gpt(messages: Vec<Message>) -> Result<String, Box<dyn std::err
     let api_key = env::var("OPEN_AI_KEY").expect("Open AI Key not found");
     let org_key = env::var("OPEN_AI_ORG").expect("Open AI Org Key not found");
     let model = env::var("GPT_MODEL").expect("LLM name not found");
-
     let url = "https://api.openai.com/v1/chat/completions";
 
     // Headers
@@ -21,9 +20,14 @@ pub async fn call_gpt(messages: Vec<Message>) -> Result<String, Box<dyn std::err
 
     // Open AI Header
     headers.insert(
-        "authorization",
+        header::AUTHORIZATION,
         HeaderValue::from_str(&format!("Bearer {}", api_key))
             .map_err(|err| -> Box<dyn std::error::Error + Send> { Box::new(err) })?,
+    );
+
+    headers.insert(
+        header::CONTENT_TYPE,
+        HeaderValue::from_static("application/json"),
     );
 
     // Open AI Org Header
@@ -47,15 +51,16 @@ pub async fn call_gpt(messages: Vec<Message>) -> Result<String, Box<dyn std::err
     };
 
     // Response
-    let res: APIResponse = client
+    let res = client
         .post(url)
         .json(&chat_completion)
         .send()
         .await
-        .map_err(|err| -> Box<dyn std::error::Error + Send> { Box::new(err) })?
-        .json()
-        .await
         .map_err(|err| -> Box<dyn std::error::Error + Send> { Box::new(err) })?;
+
+    let res = res.json::<APIResponse>()
+    .await
+    .map_err(|err| -> Box<dyn std::error::Error + Send> { Box::new(err) })?;
 
     Ok(res.choices[0].message.content.clone())
 }
@@ -77,6 +82,8 @@ mod test {
 
         if let Ok(res_str) = response {
             dbg!(res_str);
+        } else {
+            panic!()
         }
     }
 }
